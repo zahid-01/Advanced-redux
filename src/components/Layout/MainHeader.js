@@ -1,5 +1,8 @@
-import CartButton from '../Cart/CartButton';
-import classes from './MainHeader.module.css';
+import { cartActions } from "../../Store/cartSlice";
+import { Dispatch } from "@reduxjs/toolkit";
+
+import CartButton from "../Cart/CartButton";
+import classes from "./MainHeader.module.css";
 
 const MainHeader = (props) => {
   return (
