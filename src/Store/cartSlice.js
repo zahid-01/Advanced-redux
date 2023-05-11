@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   showCart: false,
-  items: 0,
 };
 
 const cartSlice = createSlice({
@@ -11,9 +10,6 @@ const cartSlice = createSlice({
   reducers: {
     toggleCart(state) {
       state.showCart = !state.showCart;
-    },
-    addItems(state) {
-      state.items = state.items + 1;
     },
   },
 });
