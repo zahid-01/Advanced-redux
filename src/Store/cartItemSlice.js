@@ -35,6 +35,9 @@ const cartItemSlice = createSlice({
         itemToBeDeleted.quantity--;
       }
     },
+    fillItems(state, actions) {
+      actions.payload.forEach((el) => state.items.push(el));
+    },
   },
 });
 
