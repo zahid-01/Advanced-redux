@@ -13,6 +13,11 @@ const cartSlice = createSlice({
       state.showCart = !state.showCart;
     },
     notification(state, actions) {
+      if (!actions.payload) {
+        console.log(actions.payload);
+        state.notification = false;
+        return;
+      }
       state.notification = {
         status: actions.payload.status,
         title: actions.payload.title,

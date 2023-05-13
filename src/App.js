@@ -1,52 +1,44 @@
 import { useSelector, useDispatch } from "react-redux";
-import { useEffect } from "react";
-import axios from "axios";
+import { Fragment, useEffect } from "react";
 
-import { cartActions } from "./Store/cartSlice";
+import { sendCartData } from "./Store/cartItemSlice";
 
 import Cart from "./components/Cart/Cart";
 import Layout from "./components/Layout/Layout";
 import Products from "./components/Shop/Products";
 import Notification from "./components/UI/Notifications";
 
+let isInitial = true;
+
 function App() {
   const dispatch = useDispatch();
   const { showCart } = useSelector((state) => state.cart);
   const cart = useSelector((state) => state.cartItems.items);
+  const notif = useSelector((state) => state.cart.notification);
 
   useEffect(() => {
-    const addedItems = async () => {
-      dispatch(
-        cartActions.notification({
-          status: "Sending",
-          title: "Request",
-          message: "Adding to cart",
-        })
-      );
-      const data = await axios({
-        method: "PUT",
-        url: "https://redux-async-60631-default-rtdb.asia-southeast1.firebasedatabase.app/items.json",
-        data: cart,
-      });
-      if (!data.statusText) throw new Error();
-      dispatch(
-        cartActions.notification({
-          status: "Success",
-          title: "Response",
-          message: "Added to cart",
-        })
-      );
-    };
+    if (isInitial) {
+      isInitial = false;
+      return;
+    }
 
-    addedItems();
+    dispatch(sendCartData(cart));
   }, [cart, dispatch]);
 
   return (
-    <Layout>
-      <Notification />
-      {showCart && <Cart />}
-      <Products />
-    </Layout>
+    <Fragment>
+      {notif && (
+        <Notification
+          status={notif.status}
+          title={notif.title}
+          message={notif.message}
+        />
+      )}
+      <Layout>
+        {showCart && <Cart />}
+        <Products />
+      </Layout>
+    </Fragment>
   );
 }
 
