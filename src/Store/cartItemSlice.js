@@ -1,7 +1,4 @@
 import { createSlice } from "@reduxjs/toolkit";
-import axios from "axios";
-
-import { cartActions } from "./cartSlice";
 
 const cartItemSlice = createSlice({
   name: "CartItem",
@@ -39,54 +36,13 @@ const cartItemSlice = createSlice({
       }
     },
     fillItems(state, actions) {
-      actions.payload.forEach((el) => state.items.push(el));
+      actions.payload.forEach((el) => {
+        state.items.push(el);
+        state.numberOfCartItems += el.quantity;
+      });
     },
   },
 });
-
-export const sendCartData = (cart) => {
-  return async (dispatch) => {
-    dispatch(
-      cartActions.notification({
-        status: "Sending",
-        title: "Request",
-        message: "Adding to cart",
-      })
-    );
-
-    const addedItems = async () => {
-      const data = await axios({
-        method: "PUT",
-        url: "https://redux-async-60631-default-rtdb.asia-southeast1.firebasedatabase.app/items.json",
-        data: cart,
-      });
-      console.log(data.statusText);
-      if (data.statusText !== "OK") throw new Error("SCREWED");
-    };
-
-    await addedItems().catch((e) => {
-      console.log(e);
-      dispatch(
-        cartActions.notification({
-          status: "error",
-          title: "Response",
-          message: "Something went wrong",
-        })
-      );
-      return;
-    });
-
-    dispatch(
-      cartActions.notification({
-        status: "success",
-        title: "Response",
-        message: "Added to cart",
-      })
-    );
-  };
-};
-
-// export const ddd =
 
 export const cartItemActions = cartItemSlice.actions;
 export default cartItemSlice;
